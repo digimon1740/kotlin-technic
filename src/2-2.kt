@@ -14,7 +14,14 @@ fun main(args: Array<String>) {
 
     var a1: Animal = c1 // 하위 자료형이 상위 자료형으로의 변환은 가능(다형성)
 
-    val c3: Box<Cat> = Box<Cat>(c1)
-    val c4: Box<Animal> = Box<Cat>(c1)
-    val c5: Box<Cat> = Box<Animal>(c1)
+
+
+    val mutableList = mutableListOf<Animal>(a1,c1)
+    val list = listOf(a1,c1).asSequence()
+
+    println(mutableList)
+    println(list)
+//    val c3: Box<Cat> = Box<Cat>(c1)
+//    val c4: Box<Animal> = Box<Cat>(c1)
+//    val c5: Box<Cat> = Box<Animal>(c1)
 }
