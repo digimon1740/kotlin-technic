@@ -1,3 +1,5 @@
+import java.util.function.IntUnaryOperator
+
 // 3.2.4
 class FunFunctions {
 
@@ -72,10 +74,83 @@ fun triple(n: Int) = n * 3
 
 fun compose(f: (Int) -> Int, g: (Int) -> Int): (Int) -> Int = { f(g(it)) }
 
+val square: (Int) -> Int = { n -> n * n }
+val triple: (Int) -> Int = { n -> n * 3 }
+val compose: ((Int) -> Int) -> ((Int) -> Int) -> (Int) -> Int =
+    { x ->
+        { y ->
+            { z ->
+                x(y(z))
+            }
+
+        }
+    }
+
+typealias IntUnaryOp = (Int) -> Int
+
+val square2: IntUnaryOp = { it * it }
+val square3: IntUnaryOperator = IntUnaryOperator {
+    it * 2
+}
 
 fun main() {
-    println(square(triple(2)))
+    println("==========")
     val squareOfTriple = compose(::square, ::triple)
     println(squareOfTriple(2))
 
+    println("==========")
+    val squareOfTriple2 = compose(square, triple)
+    println(squareOfTriple2(2))
+
+    println("==========")
+    println(add2(1)(2))
+    println(add3(1)(3))
+
+    addTax(taxRate)(12.0)
+
+    addTax2(taxRate)(12.00)
+
+    println("==========")
+    println(partialA<Int, Int, Int>(10) { a -> { b -> a + b } }(1))
+    add33(Pair(3, 5))
 }
+val add33: (Pair<Int, Int>) -> Int = { pair -> pair.first + pair.second }
+
+
+val add2: (Int) -> (Int) -> Int = { a -> { b -> a + b } }
+
+fun add3(a: Int): (Int) -> Int = fun(b: Int): Int { return a + b }
+
+fun add4(a: Int): (Int) -> Int {
+    return fun(b: Int): Int {
+        return a + b
+    }
+}
+val map = mapOf("key" to "value")
+
+val returnApplyN = { n: Int ->
+    { f: (Int) -> Int ->
+        f(n)
+    }
+}
+val apply10 = returnApplyN(10)
+val twenty = apply10({ it + it }) // 20
+val twenty2 = apply10 { it + it } // 20
+val twenty3 = returnApplyN(10)({ it + it })
+
+//val twenty4Fail = returnApplyN(10) { it + it }
+val twenty4Success = (returnApplyN(10)) { it + it }
+
+val taxRate = 0.09
+val addTax = { taxRate: Double -> { price: Double -> price + price * taxRate } }
+
+
+fun addTax2(taxRate: Double): (Double) -> Double {
+    return fun(price: Double): Double {
+        return price + price * taxRate
+    }
+}
+
+fun <A, B, C> partialA(a: A, f: (A) -> (B) -> C): (B) -> C = f(a)
+
+val func: () -> Unit = {}
