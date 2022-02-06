@@ -82,7 +82,6 @@ val compose: ((Int) -> Int) -> ((Int) -> Int) -> (Int) -> Int =
             { z ->
                 x(y(z))
             }
-
         }
     }
 
@@ -113,7 +112,12 @@ fun main() {
     println("==========")
     println(partialA<Int, Int, Int>(10) { a -> { b -> a + b } }(1))
     add33(Pair(3, 5))
+
+    println("==========")
+    println(compose22(::square, ::triple)(100))
+
 }
+
 val add33: (Pair<Int, Int>) -> Int = { pair -> pair.first + pair.second }
 
 
@@ -126,6 +130,7 @@ fun add4(a: Int): (Int) -> Int {
         return a + b
     }
 }
+
 val map = mapOf("key" to "value")
 
 val returnApplyN = { n: Int ->
@@ -154,3 +159,70 @@ fun addTax2(taxRate: Double): (Double) -> Double {
 fun <A, B, C> partialA(a: A, f: (A) -> (B) -> C): (B) -> C = f(a)
 
 val func: () -> Unit = {}
+
+val f: (Double) -> Double = { Math.PI / 2 - it }
+val sin: (Double) -> Double = Math::sin
+//val cos: Double = compose5(f, sin)(2.0)
+
+val compose6: ((Double) -> Double) -> ((Double) -> Double) -> ((Double) -> Double) -> (Double) -> Double = { x: (Double) -> Double ->
+    { y: (Double) -> Double ->
+        { z: (Double) -> Double ->
+            {
+                x(y(z(it)))
+            }
+        }
+    }
+}
+
+val compose5: ((Double) -> (Double)) -> ((Double) -> (Double)) -> (Double) -> Double =
+    { x: (Double) -> Double ->
+        { y: (Double) -> Double ->
+            { z ->
+                x(y(z))
+            }
+        }
+    }
+
+val compose7 = { x: (Double) -> Double -> { y: (Double) -> Double -> { z: Double -> x(y(z)) } } }
+
+val cosValue = compose7({ x: Double -> Math.PI / 2 - x })
+
+
+val compose8: ((Int) -> Int) -> ((Int) -> Int) -> (Int) -> Int =
+    { x: (Int) -> Int ->
+        { y: (Int) -> Int ->
+            { z: Int ->
+                x(y(z))
+            }
+        }
+    }
+
+val compose22: ((Int) -> Int, (Int) -> Int) -> (Int) -> Int = { x, y ->
+    {
+        x(y(it))
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
